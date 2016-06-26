@@ -56,6 +56,7 @@ class ViewController: UITableViewController {
     }
     
     func setupNavigationBar() {
+        self.title = "ToDo List w/ Realm"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(ViewController.addButtonAction))
     }
     
@@ -105,13 +106,12 @@ class ViewController: UITableViewController {
                 cell.textLabel!.text = list.name
             case 1:
                 let list = finished[indexPath.row]
-                cell.textLabel!.text = list.name
+                let attributedText = NSMutableAttributedString(string: list.name)
+                attributedText.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, attributedText.length))
+                cell.textLabel!.attributedText = attributedText
             default:
                 fatalError("Error on loading values")
         }
-    
-//        let list = toDoItems![indexPath.row]
-//        cell.textLabel!.text = list.name
      
         return cell
     }
@@ -139,50 +139,52 @@ class ViewController: UITableViewController {
         tableView.reloadData()
     }
  
-
-    /*
-    // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
-    */
-
-    /*
-    // Override to support editing the table view.
+    
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            var todoItem: ToDoItem?
+            
+            switch indexPath.section {
+                case 0:
+                    todoItem = todos[indexPath.row]
+                case 1:
+                    todoItem = finished[indexPath.row]
+                default:
+                    fatalError("Error on tapping value")
+            }
+            
+            let realm = try! Realm()
+            
+            try! realm.write {
+                realm.delete(todoItem!)
+            }
+            
+            tableView.reloadData()
+        }
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

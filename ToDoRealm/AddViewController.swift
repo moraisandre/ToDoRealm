@@ -29,12 +29,13 @@ class AddViewController: UIViewController, UITextFieldDelegate {
     
     func setupTextField() { // [3]
         textField = UITextField(frame: CGRectZero)
-        textField?.placeholder = "Type in item"
+        textField?.placeholder = "Type new item"
         textField?.delegate = self
         view.addSubview(textField!)
     }
     
     func setupNavigationBar() { // [4]
+        self.title = "Add New Item"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(AddViewController.doneAction))
     }
     
