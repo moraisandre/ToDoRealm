@@ -49,7 +49,7 @@ class AddViewController: UIViewController, UITextFieldDelegate {
         if self.textField?.text!.utf16.count  > 0 { // [6.2]
             let newTodoItem = ToDoItem() // [6.3]
             newTodoItem.name = self.textField!.text!
-            
+                
             try! realm.write {
                 realm.add(newTodoItem)
             }

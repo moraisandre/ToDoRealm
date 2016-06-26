@@ -107,13 +107,36 @@ class ViewController: UITableViewController {
                 let list = finished[indexPath.row]
                 cell.textLabel!.text = list.name
             default:
-                fatalError("What the fuck did you think ??")
+                fatalError("Error on loading values")
         }
     
 //        let list = toDoItems![indexPath.row]
 //        cell.textLabel!.text = list.name
      
         return cell
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var todoItem: ToDoItem?
+        
+        switch indexPath.section {
+            case 0:
+                todoItem = todos[indexPath.row]
+            case 1:
+                todoItem = finished[indexPath.row]
+            default:
+                fatalError("Error on tapping value")
+        }
+        
+        
+        let realm = try! Realm()
+        
+        try! realm.write {
+            todoItem?.finished = !todoItem!.finished
+        }
+        
+        
+        tableView.reloadData()
     }
  
 
